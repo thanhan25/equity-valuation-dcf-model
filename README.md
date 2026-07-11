@@ -37,7 +37,7 @@ It provides an automated, version-controlled Python projection engine that gener
 
 Clone the repository and install the package in development mode along with its dependencies:
 
-```bash
+```Bash
 git clone [https://github.com/thanhan25/equity-valuation-dcf-model.git](https://github.com/thanhan25/equity-valuation-dcf-model.git)
 cd equity-valuation-dcf-model
 pip install -e .[dev]
@@ -48,8 +48,8 @@ pre-commit install
 
 Run the end-to-end engine for NVIDIA (`NVDA`) under the **Bull Case** scenario, outputting a fully linked Excel model:
 
-```bash
-valstudio run --ticker NVDA --scenario bull --output models/examples/sample_valuation_nvda.xlsx
+```Bash
+python -m valuation_studio.cli --ticker NVDA --scenario bull --output models/examples/sample_valuation_nvda.xlsx
 ```
 
 *The CLI will automatically fetch financials, project the 3-statements over 5 years, run the DCF math, and export a formatted `sample_valuation_nvda.xlsx` ready for executive review.*
@@ -98,7 +98,6 @@ equity-valuation-dcf-model/
 ├── docs/                  # Markdown documentation & layout maps
 └── scripts/
     └── make_docs.py       # Automated PDF generation (MiKTeX/pdflatex)
-
 ```
 
 ## 🧪 Testing & CI/CD
@@ -108,7 +107,7 @@ This project is built with a "100% Pass" institutional standard. The pipeline en
 To run the test suite locally:
 
 ```bash
-make test
+python -m pytest tests/ -v
 ```
 
 *Tests explicitly verify that all balance sheets remain perfectly balanced over the forecast period, and that terminal value mathematics perfectly align with institutional conventions.*
@@ -120,7 +119,3 @@ make test
 ---
 
 **Author:** [An Vo](https://www.google.com/url?sa=E&source=gmail&q=https://github.com/thanhan25) | M.Sc. Quantitative Economics Candidate, University of Bonn | Bridging rigorous econometrics with production-ready data engineering.
-
-```
-
-```

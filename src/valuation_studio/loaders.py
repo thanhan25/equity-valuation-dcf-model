@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 
 class FinancialStatementSchema(BaseModel):
     """Enforces rigorous schema validation on historical financials."""
-    years: list[int] = Field(..., min_items=3)
+    years: list[int] = Field(..., min_length=3)
     revenue: list[float]
     cogs: list[float]
     opex: list[float]
