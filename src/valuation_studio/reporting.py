@@ -1,4 +1,5 @@
 """Executive console reporting and Markdown/HTML document generation."""
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -9,6 +10,7 @@ from valuation_studio.statements import Projections
 
 class Reporter:
     """Generates visual terminal tables and boardroom summary reports."""
+
     def __init__(self) -> None:
         self.console = Console()
 
@@ -25,9 +27,7 @@ class Reporter:
 
         # Table 1: Financial Projections
         t_proj = Table(
-            title="3-Statement Summary ($M)",
-            show_header=True,
-            header_style="bold white on #1F497D"
+            title="3-Statement Summary ($M)", show_header=True, header_style="bold white on #1F497D"
         )
         t_proj.add_column("Line Item", style="bold")
         for yr in proj.years:
@@ -44,7 +44,7 @@ class Reporter:
         t_dcf = Table(
             title="Valuation Architecture & Multiples",
             show_header=True,
-            header_style="bold white on #1F497D"
+            header_style="bold white on #1F497D",
         )
         t_dcf.add_column("Valuation Metric", style="bold")
         t_dcf.add_column("Model Output", justify="right", style="bold cyan")
@@ -61,13 +61,11 @@ class Reporter:
             f" [bold]Valuation Verdict:[/bold] In the [cyan]{scenario}[/cyan] scenario, "
             f"{ticker.upper()} is valued at an intrinsic equity price of "
             f"[bold green]${dcf.implied_share_price_gordon:,.2f}[/bold green] per share, "
-            f"supported by an operational WACC of {dcf.wacc*100:.1f}% and an implied exit "
+            f"supported by an operational WACC of {dcf.wacc * 100:.1f}% and an implied exit "
             f"EBITDA multiple of {dcf.implied_ev_ebitda_multiple:.1f}x."
         )
         self.console.print(
             Panel(
-                panel_text,
-                title="[bold white]Boardroom Summary[/bold white]",
-                border_style="cyan"
+                panel_text, title="[bold white]Boardroom Summary[/bold white]", border_style="cyan"
             )
         )

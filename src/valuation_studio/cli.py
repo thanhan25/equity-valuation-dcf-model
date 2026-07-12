@@ -1,4 +1,5 @@
 """Command-line interface (CLI) for executing valuation pipelines."""
+
 from pathlib import Path
 
 import typer
@@ -16,7 +17,7 @@ app = typer.Typer(help="Valuation Studio CLI: Institutional 3-Statement & DCF En
 console = Console()
 
 
-@app.command()  # type: ignore[misc]
+@app.command() # type: ignore[misc]
 def run(
     ticker: str = typer.Option("NVDA", "--ticker", "-t", help="Stock ticker symbol."),
     scenario: str = typer.Option(
@@ -26,33 +27,37 @@ def run(
         Path("models/examples/sample_valuation_nvda.xlsx"),
         "--output",
         "-o",
-        help="Excel output path."
+        help="Excel output path.",
     ),
-    synthetic: bool = typer.Option(False, "--synthetic", help="Force synthetic data.")
+    synthetic: bool = typer.Option(False, "--synthetic", help="Force synthetic data."),
 ) -> None:
     """Runs end-to-end valuation pipeline and exports synchronized Excel model."""
-    console.print(
-        f"[bold green]Initiating Valuation Engine for {ticker.upper()}...[/bold green]"
-    )
+    console.print(f"[bold green]Initiating Valuation Engine for {ticker.upper()}...[/bold green]")
 
     data = None
     if not synthetic:
         try:
             data = DataLoader.from_yfinance(ticker)
         except Exception:
-            console.print(
-                "[yellow]API connection failed: Falling back to synthetic.[/yellow]"
-            )
+            console.print("[yellow]API connection failed: Falling back to synthetic.[/yellow]")
             synthetic = True
 
     if synthetic:
         from valuation_studio.loaders import FinancialStatementSchema
+
         data = FinancialStatementSchema(
-            years=[2023, 2024, 2025], revenue=[26974.0, 60922.0, 125000.0],
-            cogs=[11618.0, 16621.0, 31250.0], opex=[8130.0, 11329.0, 15000.0],
-            da=[1500.0, 2000.0, 3000.0], initial_cash=25980.0, initial_debt=11000.0,
-            shares_outstanding=2460.0, current_price=130.0,
-            consensus_growth_y1=0.80, consensus_growth_y2=0.40, wall_st_target=150.0
+            years=[2023, 2024, 2025],
+            revenue=[26974.0, 60922.0, 125000.0],
+            cogs=[11618.0, 16621.0, 31250.0],
+            opex=[8130.0, 11329.0, 15000.0],
+            da=[1500.0, 2000.0, 3000.0],
+            initial_cash=25980.0,
+            initial_debt=11000.0,
+            shares_outstanding=2460.0,
+            current_price=130.0,
+            consensus_growth_y1=0.80,
+            consensus_growth_y2=0.40,
+            wall_st_target=150.0,
         )
 
     # Strictly inform MyPy that data is successfully populated
@@ -81,27 +86,25 @@ def run(
         terminal_growth=selected_scen.terminal_growth,
         shares_outstanding=data.shares_outstanding,
         current_cash=proj.cash[-1],
-        current_debt=proj.debt[-1]
+        current_debt=proj.debt[-1],
     )
 
     output.parent.mkdir(parents=True, exist_ok=True)
     ExcelBridge.write_model(output, ticker, proj, dcf_res)
-    console.print(
-        f"[green]Successfully synchronized Excel model to:[/green] [bold]{output}[/bold]"
-    )
+    console.print(f"[green]Successfully synchronized Excel model to:[/green] [bold]{output}[/bold]")
 
     reporter = Reporter()
     reporter.print_executive_summary(ticker, scenario, proj, dcf_res)
 
 
-@app.command()  # type: ignore[misc]
+@app.command() # type: ignore[misc]
 def screen(
     tickers: str = typer.Option(
         "AAPL,MSFT,NVDA,META", "--tickers", help="Comma-separated tickers."
     ),
     scenario: str = typer.Option(
         "base", "--scenario", "-s", help="Scenario case: bull, base, bear."
-    )
+    ),
 ) -> None:
     """Batch processes multiple equities to identify valuation dislocations (Margin of Safety)."""
     console.print("\n[bold navy]VALUATION STUDIO: BATCH SCREENER[/bold navy]")
@@ -132,9 +135,7 @@ def screen(
 
             model = FinancialModel(data)
             proj = model.project(
-                forecast_years=5,
-                rev_growth=curve,
-                ebitda_margin=selected_scen.ebitda_margin
+                forecast_years=5, rev_growth=curve, ebitda_margin=selected_scen.ebitda_margin
             )
             dcf_res = DCFEngine.value(
                 proj=proj,
@@ -142,7 +143,7 @@ def screen(
                 terminal_growth=selected_scen.terminal_growth,
                 shares_outstanding=data.shares_outstanding,
                 current_cash=proj.cash[-1],
-                current_debt=proj.debt[-1]
+                current_debt=proj.debt[-1],
             )
 
             upside = (dcf_res.implied_share_price_gordon / data.current_price) - 1.0
@@ -155,12 +156,10 @@ def screen(
                 target_str,
                 f"{data.consensus_growth_y1 * 100:.1f}%",
                 f"${dcf_res.implied_share_price_gordon:.2f}",
-                f"[{upside_color}]{upside * 100:+.1f}%[/{upside_color}]"
+                f"[{upside_color}]{upside * 100:+.1f}%[/{upside_color}]",
             )
         except Exception:
-            table.add_row(
-                ticker, "ERROR", "ERROR", "ERROR", "ERROR", "[red]Data/API Failure[/red]"
-            )
+            table.add_row(ticker, "ERROR", "ERROR", "ERROR", "ERROR", "[red]Data/API Failure[/red]")
 
     console.print(table)
     console.print(

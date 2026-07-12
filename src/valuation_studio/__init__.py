@@ -1,4 +1,5 @@
 """Valuation Studio: Institutional 3-Statement & DCF Modeling Engine."""
+
 __version__ = "1.0.0"
 
 from valuation_studio.dcf import DCFEngine

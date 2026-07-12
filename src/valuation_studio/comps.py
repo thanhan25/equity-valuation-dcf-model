@@ -1,9 +1,11 @@
 """Peer-group valuation multiples engine with statistical outlier trimming."""
+
 import pandas as pd
 
 
 class CompsEngine:
     """Aggregates trading multiples across comparable equity peers."""
+
     @staticmethod
     def analyze(peer_data: pd.DataFrame) -> dict[str, float]:
         """

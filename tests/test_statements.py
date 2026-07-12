@@ -1,4 +1,5 @@
 """Unit tests verifying accounting identities and balance sheet integrity."""
+
 import numpy as np
 from valuation_studio.loaders import FinancialStatementSchema
 from valuation_studio.statements import FinancialModel
@@ -14,7 +15,7 @@ def test_accounting_identities() -> None:
         initial_cash=10.0,
         initial_debt=20.0,
         shares_outstanding=10.0,
-        current_price=50.0
+        current_price=50.0,
     )
 
     model = FinancialModel(schema)

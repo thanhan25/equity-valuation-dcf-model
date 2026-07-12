@@ -1,4 +1,5 @@
 """Discounted Cash Flow (DCF) valuation engine and sensitivity matrix generator."""
+
 from dataclasses import dataclass
 
 import numpy as np
@@ -23,9 +24,15 @@ class DCFResult:
 
 class DCFEngine:
     """Executes valuation modeling, discounting, and two-variable sensitivity testing."""
+
     @staticmethod
-    def calculate_wacc(cost_of_equity: float, cost_of_debt: float, tax_rate: float,
-                       equity_val: float, debt_val: float) -> float:
+    def calculate_wacc(
+        cost_of_equity: float,
+        cost_of_debt: float,
+        tax_rate: float,
+        equity_val: float,
+        debt_val: float,
+    ) -> float:
         total_cap = equity_val + debt_val
         if total_cap == 0:
             return 0.10
@@ -34,14 +41,21 @@ class DCFEngine:
         return float(we * cost_of_equity + wd * cost_of_debt * (1.0 - tax_rate))
 
     @classmethod
-    def value(cls, proj: Projections, wacc: float, terminal_growth: float,
-              shares_outstanding: float, current_cash: float, current_debt: float) -> DCFResult:
+    def value(
+        cls,
+        proj: Projections,
+        wacc: float,
+        terminal_growth: float,
+        shares_outstanding: float,
+        current_cash: float,
+        current_debt: float,
+    ) -> DCFResult:
 
         n_years = len(proj.fcff)
         # Mid-year convention discounting: t = 0.5, 1.5, ..., n - 0.5
-        discount_factors = np.array([
-            1.0 / ((1.0 + wacc) ** (t - 0.5)) for t in range(1, n_years + 1)
-        ])
+        discount_factors = np.array(
+            [1.0 / ((1.0 + wacc) ** (t - 0.5)) for t in range(1, n_years + 1)]
+        )
         pv_cf = np.sum(proj.fcff * discount_factors)
 
         # Gordon Growth Terminal Value
@@ -66,9 +80,7 @@ class DCFEngine:
                 if w <= g:
                     matrix[r, c] = 0.0
                     continue
-                df_sens = np.array([
-                    1.0 / ((1.0 + w) ** (t - 0.5)) for t in range(1, n_years + 1)
-                ])
+                df_sens = np.array([1.0 / ((1.0 + w) ** (t - 0.5)) for t in range(1, n_years + 1)])
                 pv_c = np.sum(proj.fcff * df_sens)
                 tv_c = (proj.fcff[-1] * (1.0 + g)) / (w - g)
                 pv_tv_c = tv_c / ((1.0 + w) ** n_years)
@@ -87,5 +99,5 @@ class DCFEngine:
             implied_ev_ebitda_multiple=implied_multiple,
             sensitivity_matrix=matrix,
             wacc_range=wacc_steps,
-            growth_range=growth_steps
+            growth_range=growth_steps,
         )

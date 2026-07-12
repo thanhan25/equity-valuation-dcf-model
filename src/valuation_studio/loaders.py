@@ -1,4 +1,5 @@
 """Data ingestion module for pulling standardized financials from APIs or CSVs."""
+
 from pathlib import Path
 from typing import Any
 
@@ -9,6 +10,7 @@ from pydantic import BaseModel, Field
 
 class FinancialStatementSchema(BaseModel):
     """Enforces rigorous schema validation on historical financials and estimates."""
+
     years: list[int] = Field(..., min_length=3)
     revenue: list[float]
     cogs: list[float]
@@ -30,19 +32,20 @@ class FinancialStatementSchema(BaseModel):
 
 class DataLoader:
     """Handles data fetching, standardization, and schema verification."""
+
     @staticmethod
     def from_csv(filepath: str | Path) -> FinancialStatementSchema:
         df = pd.read_csv(filepath)
         required_cols = {"metric", "y1", "y2", "y3"}
         if not required_cols.issubset(df.columns):
-            raise ValueError(
-                f"CSV missing required columns: {required_cols - set(df.columns)}"
-            )
+            raise ValueError(f"CSV missing required columns: {required_cols - set(df.columns)}")
 
         data_map: dict[str, Any] = {}
         for _, row in df.iterrows():
             data_map[str(row["metric"]).lower()] = [
-                float(row["y1"]), float(row["y2"]), float(row["y3"])
+                float(row["y1"]),
+                float(row["y2"]),
+                float(row["y3"]),
             ]
 
         return FinancialStatementSchema(
@@ -54,7 +57,7 @@ class DataLoader:
             initial_cash=data_map.get("cash", [1000.0])[0],
             initial_debt=data_map.get("debt", [2000.0])[0],
             shares_outstanding=data_map.get("shares", [1000.0])[0],
-            current_price=data_map.get("price", [100.0])[0]
+            current_price=data_map.get("price", [100.0])[0],
         )
 
     @staticmethod
@@ -83,7 +86,8 @@ class DataLoader:
 
         cash = (
             float(bs.loc["Cash And Cash Equivalents"].iloc[0])
-            if "Cash And Cash Equivalents" in bs.index else 5000.0
+            if "Cash And Cash Equivalents" in bs.index
+            else 5000.0
         )
         debt = float(bs.loc["Total Debt"].iloc[0]) if "Total Debt" in bs.index else 10000.0
         shares = float(info.get("sharesOutstanding") or 1e9)
@@ -96,8 +100,16 @@ class DataLoader:
         target_price = float(info.get("targetMeanPrice") or price)
 
         return FinancialStatementSchema(
-            years=years, revenue=revenue, cogs=cogs, opex=opex, da=da,
-            initial_cash=cash, initial_debt=debt, shares_outstanding=shares,
-            current_price=price, consensus_growth_y1=y1_growth,
-            consensus_growth_y2=y2_growth, wall_st_target=target_price
+            years=years,
+            revenue=revenue,
+            cogs=cogs,
+            opex=opex,
+            da=da,
+            initial_cash=cash,
+            initial_debt=debt,
+            shares_outstanding=shares,
+            current_price=price,
+            consensus_growth_y1=y1_growth,
+            consensus_growth_y2=y2_growth,
+            wall_st_target=target_price,
         )

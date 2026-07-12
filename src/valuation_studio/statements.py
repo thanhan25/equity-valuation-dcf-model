@@ -1,4 +1,5 @@
 """Three-statement projection engine with dynamic balance sheet plug (Cash/Revolver)."""
+
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -31,12 +32,17 @@ class Projections:
 
 class FinancialModel:
     """Projects Income Statement, Balance Sheet, and Cash Flow Statement."""
+
     def __init__(self, schema_data: Any):
         self.data = schema_data
 
     def project(
-        self, forecast_years: int = 5, rev_growth: float | list[float] = 0.15,
-        ebitda_margin: float = 0.40, tax_rate: float = 0.21, interest_rate: float = 0.05
+        self,
+        forecast_years: int = 5,
+        rev_growth: float | list[float] = 0.15,
+        ebitda_margin: float = 0.40,
+        tax_rate: float = 0.21,
+        interest_rate: float = 0.05,
     ) -> Projections:
 
         last_yr = self.data.years[-1]
@@ -57,7 +63,7 @@ class FinancialModel:
         rev = np.zeros(forecast_years)
         curr_rev = base_rev
         for i in range(forecast_years):
-            curr_rev *= (1.0 + g_rates[i])
+            curr_rev *= 1.0 + g_rates[i]
             rev[i] = curr_rev
 
         # Core margins
@@ -123,8 +129,22 @@ class FinancialModel:
         opex = gross_profit - ebitda
 
         return Projections(
-            years=proj_years, revenue=rev, cogs=cogs, gross_profit=gross_profit,
-            opex=opex, ebitda=ebitda, da=da, ebit=ebit, interest=interest,
-            ebt=ebt, taxes=taxes, net_income=net_income, capex=capex,
-            nwc=nwc, change_in_nwc=change_nwc, fcff=fcff, cash=cash, debt=debt
+            years=proj_years,
+            revenue=rev,
+            cogs=cogs,
+            gross_profit=gross_profit,
+            opex=opex,
+            ebitda=ebitda,
+            da=da,
+            ebit=ebit,
+            interest=interest,
+            ebt=ebt,
+            taxes=taxes,
+            net_income=net_income,
+            capex=capex,
+            nwc=nwc,
+            change_in_nwc=change_nwc,
+            fcff=fcff,
+            cash=cash,
+            debt=debt,
         )

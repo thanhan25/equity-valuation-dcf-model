@@ -1,4 +1,5 @@
 """Automated LaTeX compilation script generating an executive PDF methodology report."""
+
 import subprocess
 from pathlib import Path
 
@@ -96,10 +97,14 @@ def compile_pdf() -> None:
         for _ in range(2):  # Two passes for TikZ / layout resolution
             subprocess.run(
                 [
-                    "pdflatex", "-interaction=nonstopmode",
-                    "-output-directory", str(build_dir), str(tex_path)
+                    "pdflatex",
+                    "-interaction=nonstopmode",
+                    "-output-directory",
+                    str(build_dir),
+                    str(tex_path),
                 ],
-                check=True, stdout=subprocess.DEVNULL
+                check=True,
+                stdout=subprocess.DEVNULL,
             )
         print(f"Successfully compiled report to: {build_dir / 'methodology_report.pdf'}")
     except (subprocess.CalledProcessError, FileNotFoundError):

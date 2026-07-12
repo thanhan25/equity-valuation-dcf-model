@@ -1,4 +1,5 @@
 """Unit tests for valuation discounting and sensitivity grid dimensions."""
+
 import numpy as np
 from valuation_studio.dcf import DCFEngine
 from valuation_studio.statements import Projections
@@ -9,8 +10,8 @@ def test_dcf_valuation_and_sensitivity() -> None:
         years=[2024, 2025, 2026, 2027, 2028],
         ebitda=np.array([100.0, 110.0, 120.0, 130.0, 140.0]),
         fcff=np.array([50.0, 55.0, 60.0, 65.0, 70.0]),
-        cash=np.array([20.0]*5),
-        debt=np.array([10.0]*5)
+        cash=np.array([20.0] * 5),
+        debt=np.array([10.0] * 5),
     )
 
     wacc = 0.10
