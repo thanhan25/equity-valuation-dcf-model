@@ -2,7 +2,11 @@
 
 **Institutional 3-Statement & Unlevered DCF Engine with Dynamic Excel Synchronization**
 
-[![CI Pipeline](https://github.com/thanhan25/equity-valuation-dcf-model/actions/workflows/ci.yml/badge.svg)](https://github.com/thanhan25/equity-valuation-dcf-model/actions)
+[![CI Pipeline](https://github.com/thanhan25/equity-valuation-dcf-model/actions/workflows/ci.yml/badge.svg)](... badges ...)
+
+<div align="center">
+  <img src="assets/hero_image.png" alt="Valuation Studio Architecture" width="100%">
+</div>
 [![Coverage: 92%](https://img.shields.io/badge/Coverage-92%25-brightgreen.svg)](https://github.com/thanhan25/equity-valuation-dcf-model/actions)
 [![Release](https://img.shields.io/github/v/release/thanhan25/equity-valuation-dcf-model?color=success)](https://github.com/thanhan25/equity-valuation-dcf-model/releases)
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
@@ -32,13 +36,14 @@ It provides an automated projection engine that dynamically pulls real-time mark
 ## 🚀 Quickstart & Pipeline Execution
 
 ### 1. Installation
+
 Clone the repository and install the engine in development mode along with its strict testing dependencies:
+
 ```bash
 git clone [https://github.com/thanhan25/equity-valuation-dcf-model.git](https://github.com/thanhan25/equity-valuation-dcf-model.git)
 cd equity-valuation-dcf-model
 pip install -e .[dev]
 pre-commit install
-
 ```
 
 ### 2. The Batch Screener (Identify Margin of Safety)
@@ -47,7 +52,6 @@ Scan a basket of equities under Base Case parameters to isolate upside and downs
 
 ```bash
 python -m valuation_studio.cli screen --tickers AAPL,MSFT,NVDA,GOOGL,META --scenario base
-
 ```
 
 ### 3. Generate an Institutional Excel Model
@@ -56,7 +60,6 @@ Run the end-to-end engine for NVIDIA under the **Bull Case** scenario. This auto
 
 ```bash
 python -m valuation_studio.cli run --ticker NVDA --scenario bull --output models/examples/sample_valuation_nvda.xlsx
-
 ```
 
 ---
@@ -107,7 +110,6 @@ equity-valuation-dcf-model/
 ├── docs/                  # Markdown documentation & layout maps
 └── scripts/
     └── make_docs.py       # Automated PDF generation (MiKTeX/pdflatex)
-
 ```
 
 ## 🧪 Testing & CI/CD Pipeline
@@ -118,7 +120,6 @@ To run the test suite locally and verify balance sheet accounting identities:
 
 ```bash
 python -m pytest tests/ -v
-
 ```
 
 ---
@@ -138,7 +139,3 @@ python -m pytest tests/ -v
 ## 📄 License & Disclaimer
 
 **MIT License** *Disclaimer: This software is for educational, quantitative research, and portfolio demonstration purposes only. The projected financial metrics and intrinsic valuations do not constitute investment advice. Always conduct independent due diligence before committing capital to financial markets.*
-
-```
-
-```
