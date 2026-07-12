@@ -2,16 +2,16 @@
 
 **Institutional 3-Statement & Unlevered DCF Engine with Dynamic Excel Synchronization**
 
-[![CI Pipeline](https://github.com/thanhan25/equity-valuation-dcf-model/actions/workflows/ci.yml/badge.svg)](... badges ...)
-
-<div align="center">
-  <img src="assets/hero_image.png" alt="Valuation Studio Architecture" width="100%">
-</div>
+[![CI Pipeline](https://github.com/thanhan25/equity-valuation-dcf-model/actions/workflows/ci.yml/badge.svg)](https://github.com/thanhan25/equity-valuation-dcf-model/actions)
 [![Coverage: 92%](https://img.shields.io/badge/Coverage-92%25-brightgreen.svg)](https://github.com/thanhan25/equity-valuation-dcf-model/actions)
 [![Release](https://img.shields.io/github/v/release/thanhan25/equity-valuation-dcf-model?color=success)](https://github.com/thanhan25/equity-valuation-dcf-model/releases)
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![Code Style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Author: An Vo](https://img.shields.io/badge/Author-An_Vo-1F497D.svg)](https://github.com/thanhan25)
+
+<div align="center">
+  <img src="assets/hero_image.png" alt="Valuation Studio Architecture" width="100%">
+</div>
 
 > *Bridging rigorous econometrics with production-ready software engineering. Valuation Studio replaces fragile, manual spreadsheets with a CI/CD-tested Python engine capable of programmatic scenario testing, batch equity screening, and automated Excel generation.*
 
