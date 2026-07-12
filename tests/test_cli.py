@@ -9,9 +9,11 @@ runner = CliRunner()
 
 def test_cli_run_generation(tmp_path: Path) -> None:
     out_file = tmp_path / "test_nvda_model.xlsx"
+    # Use --synthetic to prevent GitHub Actions IP blocks from yfinance
     result = runner.invoke(
         app,
-        ["--ticker", "NVDA", "--scenario", "bull", "--output", str(out_file)]
+        # ADDED "run" here as the first argument to target the specific subcommand
+        ["run", "--ticker", "NVDA", "--scenario", "bull", "--output", str(out_file), "--synthetic"]
     )
 
     assert result.exit_code == 0

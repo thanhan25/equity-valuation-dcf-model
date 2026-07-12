@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 
 class FinancialStatementSchema(BaseModel):
-    """Enforces rigorous schema validation on historical financials."""
+    """Enforces rigorous schema validation on historical financials and estimates."""
     years: list[int] = Field(..., min_length=3)
     revenue: list[float]
     cogs: list[float]
@@ -21,6 +21,11 @@ class FinancialStatementSchema(BaseModel):
     initial_debt: float
     shares_outstanding: float
     current_price: float
+
+    # Wall Street Consensus Estimates
+    consensus_growth_y1: float = Field(default=0.15)
+    consensus_growth_y2: float = Field(default=0.10)
+    wall_st_target: float = Field(default=0.0)
 
 
 class DataLoader:
@@ -78,25 +83,21 @@ class DataLoader:
 
         cash = (
             float(bs.loc["Cash And Cash Equivalents"].iloc[0])
-            if "Cash And Cash Equivalents" in bs.index
-            else 5000.0
+            if "Cash And Cash Equivalents" in bs.index else 5000.0
         )
-        debt = (
-            float(bs.loc["Total Debt"].iloc[0])
-            if "Total Debt" in bs.index
-            else 10000.0
-        )
-        shares = float(info.get("sharesOutstanding", 1e9))
-        price = float(info.get("currentPrice", 100.0))
+        debt = float(bs.loc["Total Debt"].iloc[0]) if "Total Debt" in bs.index else 10000.0
+        shares = float(info.get("sharesOutstanding") or 1e9)
+        price = float(info.get("currentPrice") or 100.0)
+
+        # Dynamic Consensus Extraction (Graceful Fallbacks)
+        y1_growth = float(info.get("revenueGrowth") or 0.15)
+        earn_growth = float(info.get("earningsGrowth") or y1_growth)
+        y2_growth = (y1_growth + earn_growth) / 2.0  # Blend towards earnings growth
+        target_price = float(info.get("targetMeanPrice") or price)
 
         return FinancialStatementSchema(
-            years=years,
-            revenue=revenue,
-            cogs=cogs,
-            opex=opex,
-            da=da,
-            initial_cash=cash,
-            initial_debt=debt,
-            shares_outstanding=shares,
-            current_price=price
+            years=years, revenue=revenue, cogs=cogs, opex=opex, da=da,
+            initial_cash=cash, initial_debt=debt, shares_outstanding=shares,
+            current_price=price, consensus_growth_y1=y1_growth,
+            consensus_growth_y2=y2_growth, wall_st_target=target_price
         )

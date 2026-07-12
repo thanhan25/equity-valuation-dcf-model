@@ -34,16 +34,31 @@ class FinancialModel:
     def __init__(self, schema_data: Any):
         self.data = schema_data
 
-    def project(self, forecast_years: int = 5, rev_growth: float = 0.15,
-                ebitda_margin: float = 0.40, tax_rate: float = 0.21,
-                interest_rate: float = 0.05) -> Projections:
+    def project(
+        self, forecast_years: int = 5, rev_growth: float | list[float] = 0.15,
+        ebitda_margin: float = 0.40, tax_rate: float = 0.21, interest_rate: float = 0.05
+    ) -> Projections:
 
         last_yr = self.data.years[-1]
         proj_years = [last_yr + i for i in range(1, forecast_years + 1)]
 
+        # Dynamic Growth Curve Interpolation (Growth Fade)
+        if isinstance(rev_growth, int | float):
+            g_rates = [float(rev_growth)] * forecast_years
+        else:
+            g_rates = list(rev_growth)
+            while len(g_rates) < forecast_years:
+                # Institutional fade mechanic: decays 20% per year towards 2.5% terminal
+                next_g = max(0.025, g_rates[-1] * 0.80)
+                g_rates.append(next_g)
+
         # Revenue progression
         base_rev = self.data.revenue[-1]
-        rev = np.array([base_rev * ((1 + rev_growth) ** i) for i in range(1, forecast_years + 1)])
+        rev = np.zeros(forecast_years)
+        curr_rev = base_rev
+        for i in range(forecast_years):
+            curr_rev *= (1.0 + g_rates[i])
+            rev[i] = curr_rev
 
         # Core margins
         ebitda = rev * ebitda_margin
@@ -73,7 +88,6 @@ class FinancialModel:
         min_cash_req = rev * 0.05  # Maintain 5% of revenue as operational cash
 
         for i in range(forecast_years):
-            # Interest based on beginning debt balance
             intr = curr_debt * interest_rate
             interest[i] = intr
 
@@ -85,23 +99,17 @@ class FinancialModel:
             taxes[i] = tax_val
             net_income[i] = ni_val
 
-            # Unlevered Free Cash Flow (FCFF) calculation
-            # FCFF = EBIT * (1 - t) + D&A - CapEx - Delta NWC
             nopat = ebit[i] * (1.0 - tax_rate)
             fcff[i] = nopat + da[i] - capex[i] - change_nwc[i]
 
-            # Cash Flow Available for Debt Service / Cash Accumulation
-            # Free Cash Flow to Equity (FCFE proxy before borrowing/repayment)
             fcfe_pre = ni_val + da[i] - capex[i] - change_nwc[i]
-
             tentative_cash = curr_cash + fcfe_pre
+
             if tentative_cash < min_cash_req[i]:
-                # Draw on revolver/debt to meet minimum operating cash
                 borrowing = min_cash_req[i] - tentative_cash
                 curr_debt += borrowing
                 curr_cash = min_cash_req[i]
             else:
-                # Pay down debt with excess cash above minimum requirements
                 excess_cash = tentative_cash - min_cash_req[i]
                 paydown = min(curr_debt, excess_cash)
                 curr_debt -= paydown
