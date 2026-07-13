@@ -1,6 +1,7 @@
 """Unit tests verifying accounting identities and balance sheet integrity."""
 
 import numpy as np
+
 from valuation_studio.loaders import FinancialStatementSchema
 from valuation_studio.statements import FinancialModel
 

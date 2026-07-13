@@ -1,6 +1,7 @@
 """Unit tests for valuation discounting and sensitivity grid dimensions."""
 
 import numpy as np
+
 from valuation_studio.dcf import DCFEngine
 from valuation_studio.statements import Projections
 

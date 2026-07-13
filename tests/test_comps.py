@@ -1,6 +1,7 @@
 """Unit tests verifying peer multiple aggregation and outlier trimming."""
 
 import pandas as pd
+
 from valuation_studio.comps import CompsEngine
 
 
