@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 import numpy as np
+import numpy.typing as npt
 
 from valuation_studio.statements import Projections
 
@@ -17,9 +18,9 @@ class DCFResult:
     equity_value_gordon: float
     implied_share_price_gordon: float
     implied_ev_ebitda_multiple: float
-    sensitivity_matrix: np.ndarray  # WACC vs Terminal Growth Rate
-    wacc_range: np.ndarray
-    growth_range: np.ndarray
+    sensitivity_matrix: npt.NDArray[np.float64]  # WACC vs Terminal Growth Rate
+    wacc_range: npt.NDArray[np.float64]
+    growth_range: npt.NDArray[np.float64]
 
 
 class DCFEngine:

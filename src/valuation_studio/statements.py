@@ -4,30 +4,31 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
+import numpy.typing as npt
 
 
 @dataclass
 class Projections:
     years: list[int]
-    revenue: np.ndarray = field(default_factory=lambda: np.array([]))
-    cogs: np.ndarray = field(default_factory=lambda: np.array([]))
-    gross_profit: np.ndarray = field(default_factory=lambda: np.array([]))
-    opex: np.ndarray = field(default_factory=lambda: np.array([]))
-    ebitda: np.ndarray = field(default_factory=lambda: np.array([]))
-    da: np.ndarray = field(default_factory=lambda: np.array([]))
-    ebit: np.ndarray = field(default_factory=lambda: np.array([]))
-    interest: np.ndarray = field(default_factory=lambda: np.array([]))
-    ebt: np.ndarray = field(default_factory=lambda: np.array([]))
-    taxes: np.ndarray = field(default_factory=lambda: np.array([]))
-    net_income: np.ndarray = field(default_factory=lambda: np.array([]))
+    revenue: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    cogs: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    gross_profit: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    opex: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    ebitda: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    da: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    ebit: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    interest: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    ebt: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    taxes: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    net_income: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
 
     # Balance Sheet & Cash Flow
-    capex: np.ndarray = field(default_factory=lambda: np.array([]))
-    nwc: np.ndarray = field(default_factory=lambda: np.array([]))
-    change_in_nwc: np.ndarray = field(default_factory=lambda: np.array([]))
-    fcff: np.ndarray = field(default_factory=lambda: np.array([]))
-    cash: np.ndarray = field(default_factory=lambda: np.array([]))
-    debt: np.ndarray = field(default_factory=lambda: np.array([]))
+    capex: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    nwc: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    change_in_nwc: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    fcff: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    cash: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    debt: npt.NDArray[np.float64] = field(default_factory=lambda: np.array([]))
 
 
 class FinancialModel:
