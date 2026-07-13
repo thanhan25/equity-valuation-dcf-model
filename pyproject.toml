@@ -48,8 +48,18 @@ extend-select = ["E501"]
 extend-immutable-calls = ["typer.Option"]
 
 [tool.mypy]
-python_version = "3.10"
 strict = true
+
+[[tool.mypy.overrides]]
+module = "valuation_studio.cli"
+warn_unused_ignores = false
+
+# Add this new block to handle untyped external data libraries
+[[tool.mypy.overrides]]
+module = [
+    "pandas.*",
+    "yfinance.*"
+]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
