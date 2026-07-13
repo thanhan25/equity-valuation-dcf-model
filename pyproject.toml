@@ -49,12 +49,8 @@ extend-immutable-calls = ["typer.Option"]
 
 [tool.mypy]
 strict = true
+disallow_untyped_decorators = false
 
-[[tool.mypy.overrides]]
-module = "valuation_studio.cli"
-warn_unused_ignores = false
-
-# Add this new block to handle untyped external data libraries
 [[tool.mypy.overrides]]
 module = [
     "pandas.*",

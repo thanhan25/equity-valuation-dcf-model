@@ -17,7 +17,7 @@ app = typer.Typer(help="Valuation Studio CLI: Institutional 3-Statement & DCF En
 console = Console()
 
 
-@app.command() # type: ignore[misc]
+@app.command() 
 def run(
     ticker: str = typer.Option("NVDA", "--ticker", "-t", help="Stock ticker symbol."),
     scenario: str = typer.Option(
@@ -97,7 +97,7 @@ def run(
     reporter.print_executive_summary(ticker, scenario, proj, dcf_res)
 
 
-@app.command() # type: ignore[misc]
+@app.command() 
 def screen(
     tickers: str = typer.Option(
         "AAPL,MSFT,NVDA,META", "--tickers", help="Comma-separated tickers."
