@@ -1,6 +1,7 @@
 """Discounted Cash Flow (DCF) valuation engine and sensitivity matrix generator."""
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 import numpy.typing as npt
@@ -19,8 +20,8 @@ class DCFResult:
     implied_share_price_gordon: float
     implied_ev_ebitda_multiple: float
     sensitivity_matrix: npt.NDArray[np.float64]  # WACC vs Terminal Growth Rate
-    wacc_range: npt.NDArray[np.float64]
-    growth_range: npt.NDArray[np.float64]
+    wacc_range: npt.NDArray[np.floating[Any]]  # WACC values used in sensitivity matrix
+    growth_range: npt.NDArray[np.floating[Any]]  # Terminal growth values used in sensitivity matrix
 
 
 class DCFEngine:
